@@ -39,10 +39,9 @@ else:
             st.markdown(prompt)
 
         # Convert Streamlit message history to Gemini chat history format.
-        # Exclude the latest prompt since it will be sent via send_message.
+        # Exclude the latest prompt since it will be sent via send_message_stream.
         history = []
         for m in st.session_state.messages[:-1]:
-            # Map OpenAI/Streamlit roles ("user", "assistant") to Gemini roles ("user", "model")
             gemini_role = "user" if m["role"] == "user" else "model"
             history.append(
                 types.Content(
@@ -57,8 +56,8 @@ else:
             history=history
         )
 
-        # Generate a response using streaming.
-        response_stream = chat.send_message(prompt, stream=True)
+        # Generate a response using streaming via send_message_stream.
+        response_stream = chat.send_message_stream(prompt)
 
         def stream_generator():
             for chunk in response_stream:
